@@ -53,11 +53,13 @@ class ProfileEditForm(forms.ModelForm):
 @login_required(login_url='/login')
 def show_main(request):
     user = request.user
+    first_name = request.user.first_name
     context = {
         'name': 'Pak Bepe',
         'class': 'PBP A',
         'last_login': request.COOKIES['last_login'],
         'user' : user,
+        'firstname' : first_name,
     }
 
     return render(request, 'main.html', context)
