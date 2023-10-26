@@ -26,26 +26,34 @@ class RegisterForm(UserCreationForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].help_text = None
+        self.fields['username'].help_text = None #"What should we call you, dear audience"
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
         
     def save(self, commit=True):
         user = super(RegisterForm, self).save(commit=False)
-        first_name, middle_name, last_name = self.cleaned_data["fullname"].split()
-        user.first_name = first_name
-        user.last_name = last_name
-        user.middle_name = middle_name
+        full_name = self.cleaned_data["fullname"].split()
+        user.first_name = full_name[0]
+        #print(user.first_name)
+        user.last_name = full_name[-1]
         user.email = self.cleaned_data["email"]
         user.password = self.cleaned_data["password1"]
-        if commit:
-            user.save()
+        user.set_password(user.password)
+        user.role = self.cleaned_data["role"] 
+        user.save()
+        #print(user.role)
         return user
+    
+    
     
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username']  # Add other fields as needed
+        fields = ['username', 'email']  # Add other fields as needed
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = None
     
 
     
@@ -53,11 +61,13 @@ class ProfileEditForm(forms.ModelForm):
 @login_required(login_url='/login')
 def show_main(request):
     user = request.user
+    first_name = request.user.first_name
     context = {
         'name': 'Pak Bepe',
         'class': 'PBP A',
-        'last_login': request.COOKIES['last_login'],
+        #'last_login': request.COOKIES['last_login'],
         'user' : user,
+        'firstname' : first_name,
     }
 
     return render(request, 'main.html', context)
@@ -100,16 +110,18 @@ def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password1']
-            role = form.cleaned_data['role']
+            #sername = form.cleaned_data['username']
+            #email = form.cleaned_data['email']
+            #password = form.cleaned_data['password1']
+            #role = form.cleaned_data['role']
+            #first_name, middle_name, last_name = form.cleaned_data["fullname"].split()
 
             # Create the user with the selected role
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.role = role  # Assuming you have a UserProfile associated with User
+            #user = User.objects.create_user(username=username, email=email, password=password, role=role, first_name=first_name, last_name=last_name)
+            #user.role = role  # Assuming you have a UserProfile associated with User
 
             # Additional code to handle the user registration
+            form.save()
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
         
@@ -144,9 +156,10 @@ def edit_profile(request):
         if form.is_valid():
             form.save()
             response = HttpResponseRedirect(reverse("main:show_main")) 
-            response.set_cookie('last_login', str(datetime.datetime.now()))
+            #response.set_cookie('last_login', str(datetime.datetime.now()))
             return response
     else:
         form = ProfileEditForm(instance=request.user)
 
     return render(request, 'edit.html', {'form': form})
+
