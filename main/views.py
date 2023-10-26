@@ -31,3 +31,30 @@ def library(request):
 def booklist(request):
     context = {}
     return render(request, "booklist.html", context)
+
+def search_book(request):
+    if request.method == "POST" and request.POST['Searched'] != '':
+        Searched = request.POST['Searched']
+        Books = Book.objects.filter(name__contains=Searched) # Filter books by name
+        context = {
+            'Searched': Searched,
+            'Books': Books
+        }
+        return render(request, 'search_book.html', context)
+    else:
+        return HttpResponseRedirect(reverse('main:library'))
+        
+        # context = {
+            
+        # }
+        # return render(request, 'search_book.html', context)
+    
+def create_book(request):
+    form = BookForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_book.html", context)
