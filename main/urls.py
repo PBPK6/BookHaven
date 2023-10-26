@@ -11,5 +11,6 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', login_user, name='login'),
     path('logout/', logout_user, name='logout'),
-    path('edit/', edit_profile, name='edit')
+    path('edit/', edit_profile, name='edit'),
+    path("api/books", get_books, name="get_books"),
 ]

@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from main.forms import BookForm
-from main.models import Book
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -13,6 +11,10 @@ from django.urls import reverse
 from django import forms
 import csv, datetime
 
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.core import serializers
+from main.models import Book
 
 
 class RegisterForm(UserCreationForm):
@@ -73,27 +75,16 @@ def show_main(request):
     return render(request, 'main.html', context)
 
 def top(request):
-    x = []
-    with open('archive/Books.csv') as file:
-        csv_reader = csv.DictReader(file)
-
-        for line in csv_reader:
-            x += [line['Book-Title']]
-    context = {"Titles": x[:10]}
+    items =  Book.objects.all()[:10]
+    context = {
+        'items': items,
+    }
     return render(request, "top.html", context)
 
 def library(request):
-    titles = []
-    images = []
-    with open('archive/Books.csv') as file:
-        csv_reader = csv.DictReader(file)
-
-        for line in csv_reader:
-            titles += [line['Book-Title']]
-            images += [line['Image-URL-L']]
+    items =  Book.objects.all()
     context = {
-        'titles' : titles[:100],
-        'images' : images[:100],
+        'items': items,
     }
     return render(request, "library.html", context)
 
@@ -163,3 +154,6 @@ def edit_profile(request):
 
     return render(request, 'edit.html', {'form': form})
 
+def get_books(request):
+    book = Book.objects.all()
+    return HttpResponse(serializers.serialize("json",book))
