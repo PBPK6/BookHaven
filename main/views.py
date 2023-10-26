@@ -158,8 +158,8 @@ def get_books(request):
     return HttpResponse(serializers.serialize("json",book))
   
 def search_book(request):
-    if request.method == "POST" and request.POST['Searched'] != '':
-        Searched = request.POST['Searched']
+    if request.method == "GET" and request.GET['Searched'] != '':
+        Searched = request.GET['Searched']
         Books = Book.objects.filter(title__contains=Searched) # Filter books by title
         context = {
             'Searched': Searched,

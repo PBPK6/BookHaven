@@ -18,8 +18,7 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'main:booklist' %}">Booklist</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search" method=POST action="{% url 'main:search_book' %}">
-                {% csrf_token %}
+            <form class="d-flex" role="search" method=GET action="{% url 'main:search_book' %}">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name = "Searched">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
