@@ -26,7 +26,7 @@ class RegisterForm(UserCreationForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].help_text = None
+        self.fields['username'].help_text = None #"What should we call you, dear audience"
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
         
@@ -34,15 +34,17 @@ class RegisterForm(UserCreationForm):
         user = super(RegisterForm, self).save(commit=False)
         full_name = self.cleaned_data["fullname"].split()
         user.first_name = full_name[0]
+        #print(user.first_name)
         user.last_name = full_name[-1]
-        user.role = self.cleaned_data["role"]
-        #print(user.middle_name)
         user.email = self.cleaned_data["email"]
         user.password = self.cleaned_data["password1"]
         user.set_password(user.password)
-        if commit:
-            user.save()
+        user.role = self.cleaned_data["role"] 
+        user.save()
+        #print(user.role)
         return user
+    
+    
     
 class ProfileEditForm(forms.ModelForm):
     class Meta:
@@ -146,3 +148,4 @@ def edit_profile(request):
         form = ProfileEditForm(instance=request.user)
 
     return render(request, 'edit.html', {'form': form})
+
