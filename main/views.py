@@ -64,12 +64,11 @@ class ProfileEditForm(forms.ModelForm):
 def show_main(request):
     user = request.user
     first_name = request.user.first_name
+    items =  Book.objects.all()
     context = {
-        'name': 'Pak Bepe',
-        'class': 'PBP A',
-        #'last_login': request.COOKIES['last_login'],
         'user' : user,
         'firstname' : first_name,
+        'items': items,
     }
 
     return render(request, 'main.html', context)
