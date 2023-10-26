@@ -3,11 +3,6 @@
         <a class="navbar-brand" href="#"><img src="https://i.imgur.com/M3JXpkW.png?1" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
             Book Haven
         </a>
-        <a href="{% url 'main:edit' %}">
-            <button>
-                Edit Profile
-            </button>
-        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -36,9 +31,9 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#">Account</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:edit' %}">Edit Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="{% url 'main:logout' %}">Logout (if logged in)</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:logout' %}">Logout</a></li>
                 </ul>
             </li>
         </div>

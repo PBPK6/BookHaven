@@ -83,11 +83,25 @@ def top(request):
     return render(request, "top.html", context)
 
 def library(request):
-    context = {}
+    titles = []
+    images = []
+    with open('archive/Books.csv') as file:
+        csv_reader = csv.DictReader(file)
+
+        for line in csv_reader:
+            titles += [line['Book-Title']]
+            images += [line['Image-URL-L']]
+    context = {
+        'titles' : titles[:100],
+        'images' : images[:100],
+    }
     return render(request, "library.html", context)
 
 def booklist(request):
-    context = {}
+    user = request.user
+    context = {
+        'user' : user,
+    }
     return render(request, "booklist.html", context)
 
 def register(request):
