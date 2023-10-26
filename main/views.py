@@ -132,7 +132,7 @@ def login_user(request):
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
     context = {}
     return render(request, 'login.html', context)
-
+  
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
@@ -156,3 +156,30 @@ def edit_profile(request):
 def get_books(request):
     book = Book.objects.all()
     return HttpResponse(serializers.serialize("json",book))
+  
+def search_book(request):
+    if request.method == "POST" and request.POST['Searched'] != '':
+        Searched = request.POST['Searched']
+        Books = Book.objects.filter(title__contains=Searched) # Filter books by title
+        context = {
+            'Searched': Searched,
+            'Books': Books
+        }
+        return render(request, 'search_book.html', context)
+    else:
+        return HttpResponseRedirect(reverse('main:library'))
+        
+        # context = {
+            
+        # }
+        # return render(request, 'search_book.html', context)
+    
+def create_book(request):
+    form = BookForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_book.html", context)

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+{% if Books %}
+<h1> Search results for: {{ Searched }} </h1>
+<br/>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mx-4 my-3" >
+        {% for Book in Books %}
+        <div class="col">
+            <div class="card h-100">
+              <img src="{{title}}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">{{Book.name}}</h5>
+                <p class="card-text">{{Book.author}}</p>
+                <p class="card-text">{{Book.description}}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+    </div>
+{% else %}
+    <h1> No results found for: {{ Searched }} </h1>
+
+{% endif %}
+{% endblock content %}
