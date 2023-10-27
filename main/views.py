@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from main.forms import BookForm
-from main.models import Book
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -13,6 +11,10 @@ from django.urls import reverse
 from django import forms
 import csv, datetime
 
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.core import serializers
+from main.models import Book
 
 
 class RegisterForm(UserCreationForm):
@@ -62,38 +64,26 @@ class ProfileEditForm(forms.ModelForm):
 def show_main(request):
     user = request.user
     first_name = request.user.first_name
+    items =  Book.objects.all()
     context = {
-        'name': 'Pak Bepe',
-        'class': 'PBP A',
-        #'last_login': request.COOKIES['last_login'],
         'user' : user,
         'firstname' : first_name,
+        'items': items,
     }
 
     return render(request, 'main.html', context)
 
 def top(request):
-    x = []
-    with open('archive/Books.csv') as file:
-        csv_reader = csv.DictReader(file)
-
-        for line in csv_reader:
-            x += [line['Book-Title']]
-    context = {"Titles": x[:10]}
+    items =  Book.objects.all()[:10]
+    context = {
+        'items': items,
+    }
     return render(request, "top.html", context)
 
 def library(request):
-    titles = []
-    images = []
-    with open('archive/Books.csv') as file:
-        csv_reader = csv.DictReader(file)
-
-        for line in csv_reader:
-            titles += [line['Book-Title']]
-            images += [line['Image-URL-L']]
+    items =  Book.objects.all()
     context = {
-        'titles' : titles[:100],
-        'images' : images[:100],
+        'items': items,
     }
     return render(request, "library.html", context)
 
@@ -142,7 +132,7 @@ def login_user(request):
             messages.info(request, 'Sorry, incorrect username or password. Please try again.')
     context = {}
     return render(request, 'login.html', context)
-
+  
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
@@ -163,3 +153,33 @@ def edit_profile(request):
 
     return render(request, 'edit.html', {'form': form})
 
+def get_books(request):
+    book = Book.objects.all()
+    return HttpResponse(serializers.serialize("json",book))
+  
+def search_book(request):
+    if request.method == "GET" and request.GET['Searched'] != '':
+        Searched = request.GET['Searched']
+        Books = Book.objects.filter(title__contains=Searched) # Filter books by title
+        context = {
+            'Searched': Searched,
+            'Books': Books
+        }
+        return render(request, 'search_book.html', context)
+    else:
+        return HttpResponseRedirect(reverse('main:library'))
+        
+        # context = {
+            
+        # }
+        # return render(request, 'search_book.html', context)
+    
+def create_book(request):
+    form = BookForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_book.html", context)
