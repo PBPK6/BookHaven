@@ -7,34 +7,49 @@
 {% block content %}
 <style>
 body {
-    background-color: #DB0032;
+    background-image: linear-gradient(to right, #0174be , #ffc436);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+.custom-table {
+    background-color: #FFC436; /* Set the desired background color */
+    border-collapse: separate; 
+    border-spacing: 10px;
+}
+tr {
+    margin-bottom: 10px; /* Adjust this value to set the desired spacing */
+    padding-bottom: 10px;
+}
+li {
+    word-wrap: break-word; /* This will make the text wrap within the container */
 }
 </style>
-<div style="display: flex; justify-content: center; align-items: center; height: 25vh;">
-    <h1>Welcome to Bookhaven</h1>
+<div style=" display: flex; justify-content: center; align-items: center; height: 25vh; margin: 40px; margin-right: 50px;">
+    <h1 style="font-family: Roboto, Corbel, Avenir; font-size: 72px; text-align: center;">Welcome to Bookhaven</h1>
 </div>
-<div style="display: flex; justify-content: center; align-items: center; height: 50vh; color=#a73121;">
-    <div class="login" style="text-align: center; border: 1px solid #DB0032; padding: 20px; border-radius: 5px; background-color: #dad4b5;">
-        <h2 style="font-family: Helvetica, sans-serif; font-weight: bold;">Login</h2>
-        <form method="POST" action="">
+
+    <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px; text-align: left;">
+        <h2 style="font-family: Helvetica, sans-serif; font-weight: bold; text-align: center;">Login</h2>
+        <form method="POST" style="text-align: center; padding: 5px; border-radius: 10px; justify-content: center; align-items: center; border:none;" action="">
             {% csrf_token %}
-            <table>
+            <table class="custom-table">
                 <tr>
-                    <td style="font-family: Helvetica, sans-serif;">Username: </td>
+                    <td style="font-family: Helvetica, sans-serif; margin:10px;">Username: </td>
                     <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
                 </tr>
-                        
                 <tr>
                     <td style="font-family: Helvetica, sans-serif;">Password: </td>
                     <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
                 </tr>
-
-                <tr>
-                    <td></td>
-                    <td><button><input class="btn login_btn" type="submit" value="Login"></button></td>
-                </tr>
             </table>
+            <button style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;" onmouseover="this.style.background-color='#0174BE';" onmouseout="this.style.backgroundColor='#0174BE'; this.style.color='#FFC436';"><input class="btn login_btn" type="submit" value="Login"></button>
+            
         </form>
+        <a href="{% url 'main:register' %}"> <button style="height: 40px; margin-top: 10px; padding: 10px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff; text-align: center;"> Register Now </button></a>
 
         {% if messages %}
             <ul>
@@ -44,9 +59,8 @@ body {
             </ul>
         {% endif %}     
         
-        Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+        
     </div>
-</div>
 
 
 
