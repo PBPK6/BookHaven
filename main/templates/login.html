@@ -5,26 +5,33 @@
 {% endblock meta %}
 
 {% block content %}
-
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <div class="login" style="text-align: center; border: 1px solid #ccc; padding: 20px; border-radius: 5px; background-color: #f8f8f8;">
-        <h1>Login</h1>
+<style>
+body {
+    background-color: #DB0032;
+}
+</style>
+<div style="display: flex; justify-content: center; align-items: center; height: 25vh;">
+    <h1>Welcome to Bookhaven</h1>
+</div>
+<div style="display: flex; justify-content: center; align-items: center; height: 50vh; color=#a73121;">
+    <div class="login" style="text-align: center; border: 1px solid #DB0032; padding: 20px; border-radius: 5px; background-color: #dad4b5;">
+        <h2 style="font-family: Helvetica, sans-serif; font-weight: bold;">Login</h2>
         <form method="POST" action="">
             {% csrf_token %}
             <table>
                 <tr>
-                    <td>Username: </td>
+                    <td style="font-family: Helvetica, sans-serif;">Username: </td>
                     <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
                 </tr>
                         
                 <tr>
-                    <td>Password: </td>
+                    <td style="font-family: Helvetica, sans-serif;">Password: </td>
                     <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
                 </tr>
 
                 <tr>
                     <td></td>
-                    <td><input class="btn login_btn" type="submit" value="Login"></td>
+                    <td><button><input class="btn login_btn" type="submit" value="Login"></button></td>
                 </tr>
             </table>
         </form>
@@ -40,6 +47,7 @@
         Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
     </div>
 </div>
+
 
 
 {% endblock content %}

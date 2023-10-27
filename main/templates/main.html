@@ -2,18 +2,64 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-<h1>Books of the day:</h1>
+{% load static %}
+<style>
+.container {
+    display: grid;
+    place-items: center; /* Optionally, for vertical centering */
+    background-color: #f8f8f8;
+    padding: 40px;
+    margin: 0 auto;
+    width: 75%; /* Set the width to 80% of the viewport width */
+    max-width: 1200px;
+    border-radius: 10px;
+    min-height:450px;
+}
+.carousel-control-prev-icon, .carousel-control-next-icon{
+  background-color: #000000;
+}
+h1 {
+    text-align: center; /* Optionally, for horizontal centering within the h1 element */
+    margin: 25px;
+  }
+
+  body {
+    background-color: #F2E8C6;
+}
+.banner {
+  position: relative;
+  background-color: #3498db; /* Set background color for the banner */
+  color: #fff; /* Set text color for the banner content */
+  text-align: center; /* Center the content */
+  padding: 0px; /* Add padding to the top and bottom */
+}
+
+.banner img {
+  width: 100%; /* Ensure the image doesn't exceed its container */
+  max-height: 175px;
+}
+.carousel-indicators{
+  bottom: -50px;
+}
+.carousel-caption{
+  bottom: 225px;
+}
+</style>
+
+<img src="{% static 'Library1.jpg' %}" class="img-fluid" alt="Responsive image" style="width: 100%;">
+<h1>Books Of The Day</h1>
+<div class="container">
 <div id="carouselExampleCaptions" class="carousel slide">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" style="background-color: #A73121;" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" style="background-color: #A73121;" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" style="background-color: #A73121;" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
         <img src="https://m.media-amazon.com/images/I/71-++hbbERL._AC_UF1000,1000_QL80_.jpg" class="d-block w-25 mx-auto" alt="...">
         <div class="carousel-caption d-none d-md-block">
-          <button class="btn btn-outline-success" type="submit">View</button>
+          <button class="btn btn-outline-success" styletype="submit">View</button>
         </div>
       </div>
       <div class="carousel-item">
@@ -38,6 +84,7 @@
       <span class="visually-hidden">Next</span>
     </button>
   </div>
+</div>
 
 <h1>Books by Warner Books</h1>
   <div class="container">
