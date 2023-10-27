@@ -82,8 +82,10 @@ def top(request):
 
 def library(request):
     items =  Book.objects.all()
+    user = request.user
     context = {
         'items': items,
+        'user': user,
     }
     return render(request, "library.html", context)
 
