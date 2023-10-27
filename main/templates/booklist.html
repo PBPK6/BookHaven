@@ -4,4 +4,38 @@
 {% include 'navbar.html' %}
 <h1>Booklist:</h1>
 <a class="btn btn-primary" href="{% url 'main:library' %}" role="button">Add Book</a>
+
+<table id="catalog"></table>
+
+<script>
+    async function getBooks() {
+        return fetch("{% url 'main:get_user_books' %}").then((res) => res.json())
+    }
+
+    async function refreshBooks() {
+        document.getElementById("catalog").innerHTML = ""
+        const books = await getBooks()
+        let htmlString = `<div class="container">
+            <div class="row row-cols-1 row-cols-md-4 g-4">`
+        books.forEach((item) => {
+            htmlString += `\n<div class="col mx">
+                <div class="card" style="width: 300px; height: 400px;">
+                    <div style="width: 100%; height: 100%; overflow: hidden;">
+                        <img src="${item.fields.image_l}" style="object-fit: cover; width: 100%; height: 100%;" class="card-img-top" alt="...">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${item.fields.title}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
+                    </div>
+                </div>
+            </div>` 
+        })
+        htmlString += `</div>
+        </div>`
+        
+        document.getElementById("catalog").innerHTML = htmlString
+    }
+
+    refreshBooks()
+</script>
 {% endblock content %}

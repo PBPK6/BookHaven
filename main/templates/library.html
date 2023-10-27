@@ -36,7 +36,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
                     <div class="card-footer">
-                        <button type="button" class="btn btn-outline-success">Add</button>
+                        <button type="button" class="btn btn-outline-success" onclick="addItemToList(${item.pk})">Add</button>
                     </div>
                 </div>
             </div>` 
@@ -48,6 +48,17 @@
     }
 
     refreshBooks()
+
+    async function addItemToList(itemId) {
+        const response = await fetch("/add_to_list/" + itemId);
+        if (response.status === 200) {
+            // Handle success, e.g., show a message to the user
+            console.log('Item added to the cart');
+        } else {
+            // Handle any errors or show an error message
+            console.error('Failed to add the item to the cart');
+        }
+    }
 </script>
 
 {% endblock content %}

@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +14,7 @@ import csv, datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
-from main.models import Book
+from main.models import *
 
 
 class RegisterForm(UserCreationForm):
@@ -90,8 +90,10 @@ def library(request):
     return render(request, "library.html", context)
 
 def booklist(request):
+    items =  Book.objects.all()
     user = request.user
     context = {
+        'items': items,
         'user' : user,
     }
     return render(request, "booklist.html", context)
@@ -155,10 +157,6 @@ def edit_profile(request):
 
     return render(request, 'edit.html', {'form': form})
 
-def get_books(request):
-    book = Book.objects.all()
-    return HttpResponse(serializers.serialize("json",book))
-  
 def search_book(request):
     if request.method == "GET" and request.GET['Searched'] != '':
         Searched = request.GET['Searched']
@@ -185,3 +183,21 @@ def create_book(request):
 
     context = {'form': form}
     return render(request, "create_book.html", context)
+
+@login_required
+def add_to_list(request, id):
+    book = get_object_or_404(Book, pk=id)
+    userbook_entry, created = userbook.objects.get_or_create(user=request.user)
+    userbook_entry.books.add(book)
+
+    return JsonResponse({'message': 'Book added to the list'})
+
+def get_books(request):
+    book = Book.objects.all()
+    return HttpResponse(serializers.serialize("json",book))
+
+def get_user_books(request):
+    user_books = userbook.objects.get(user=request.user)
+
+    books_data = user_books.books.all()
+    return HttpResponse(serializers.serialize("json",books_data))
