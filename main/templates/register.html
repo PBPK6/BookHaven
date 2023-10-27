@@ -5,19 +5,20 @@
 {% endblock meta %}
 
 {% block content %}  
-
+<style>
+    body {
+        background-color: #a73121;
+    }
+</style>
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <div class="login" style="text-align: center; border: 1px solid #ccc; padding: 20px; border-radius: 5px; background-color: #f8f8f8;">
-        <h1>Register</h1>
+        <h1 style="font-family: Helvetica, sans-serif; font-weight: bold;">Register</h1>
         <form method="POST">
             {% csrf_token %}
             <table>
                 {{ form.as_table }}
-                <tr>
-                    <td></td>
-                    <td><input type="submit" name="submit" value="Daftar" class="btn register_btn"></td>
-                </tr>
             </table>
+            <button style="margin-top: 10px;"><input type="submit" name="submit" value="Daftar" class="btn register_btn"></button>
         </form>
 
         {% if messages %}

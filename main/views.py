@@ -18,7 +18,7 @@ import csv, datetime
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(label = "Email")
     fullname = forms.CharField(label = "Full")
-    role = forms.ChoiceField(choices=(('R', 'Reader'), ('W', 'Writer')), required=True)
+    role = forms.ChoiceField(choices=(('R', 'Reader'), ('A', 'Admin')), required=True)
 
     class Meta:
         model = User
