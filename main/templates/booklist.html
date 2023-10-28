@@ -9,7 +9,7 @@
 
 <script>
     async function getBooks() {
-        return fetch("{% url 'main:get_user_books' %}").then((res) => res.json())
+        return fetch("{% url 'main:get_user_books' username=user %}").then((res) => res.json())
     }
 
     async function refreshBooks() {
@@ -27,9 +27,11 @@
                         <h5 class="card-title">${item.fields.title}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
+                    {% if request.user == user %}
                     <div class="card-footer">
                         <button type="button" class="btn btn-outline-danger" onclick="deleteItem(${item.pk})">delete</button>
                     </div>
+                    {% endif %}
                 </div>
             </div>` 
         })

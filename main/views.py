@@ -74,9 +74,11 @@ def show_main(request):
     return render(request, 'main.html', context)
 
 def top(request):
+    user = request.user
     items =  Book.objects.all()[:10]
     context = {
         'items': items,
+        'user': user,
     }
     return render(request, "top.html", context)
 
@@ -89,9 +91,9 @@ def library(request):
     }
     return render(request, "library.html", context)
 
-def booklist(request):
+def booklist(request, username):
     items =  Book.objects.all()
-    user = request.user
+    user = User.objects.get(username=username)
     context = {
         'items': items,
         'user' : user,
@@ -204,7 +206,8 @@ def get_books(request):
     book = Book.objects.all()
     return HttpResponse(serializers.serialize("json",book))
 
-def get_user_books(request):
-    user_books = userbook.objects.get(user=request.user)
+def get_user_books(request, username):
+    user = User.objects.get(username=username)
+    user_books = userbook.objects.get(user=user)
     books_data = user_books.books.all()
     return HttpResponse(serializers.serialize("json",books_data))
