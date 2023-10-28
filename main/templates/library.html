@@ -10,6 +10,10 @@
         background-color: #A73121;
       }
 </style>
+
+<div class="container mt-3">
+    <h1 style="text-align: center; margin: 12px;"> Welcome to the BookHaven Library </h1>
+</div>
 {% if user.is_superuser %}
 <a class="btn btn-danger" href="/admin/main/book/" role="button">ADD/EDIT/DELETE</a>
 {% endif %}
@@ -18,10 +22,10 @@
     <input type="text" id="searchInput" class="form-control" placeholder="Search for books..." style="margin:12px;">
 </div>
 
-<div class="container mt-3" style="margin: 5px;">
+<div class="container mt-3" style="margin: 0 auto; margin-bottom: 10px;">
     <div class="row">
         <div class="col-md-6">
-            <div class="input-group">
+            <div class="input-group" style="margin: 0 auto;">
                 <span class="input-group-text">Book titles starting with the letter:</span>
                 <select id="letterDropdown" class="form-select" onchange="filterByLetter(this.value)">
                     <option value="ALL">Select a letter</option>
@@ -57,8 +61,8 @@
     </div>
 </div>
 
-<table id="catalog"></table>
-<div id="noResultsMessage" class="alert alert-info" style="display:none;"></div>
+<table id="catalog" style="margin: 0 auto;"></table>
+<div id="noResultsMessage" style="font-size: 24px; text-align: center; display:none; justifyContent: center; backgroundColor: yellowochre;"></div>
 
 <script>
     async function getBooks() {
@@ -68,30 +72,33 @@
     async function searchBooks(query) {
         const books = await getBooks();
         const filteredBooks = books.filter(item => item.fields.title.toLowerCase().includes(query.toLowerCase()));
+        //The ".includes" function means that it will scan the field 'title' to see if it contains the string inputted by the user 
         return filteredBooks;
+        //Return the resulting filtered
     }
 
     async function filterByLetter(letter) {
         const noResultsMessage = document.getElementById("noResultsMessage");
 
-        if (!letter) {
-            const query = document.getElementById("searchInput").value.trim();
-            const books = query ? await searchBooks(query) : await getBooks();
-            refreshBooks(books);
-            return;
-        }
-
         if (letter === "ALL") {
+            //If the user sets the search letter to no letters, then display all books
             const books = await getBooks();
             refreshBooks();
         } else {
+            //If the user requests a letter, then wait to get all books then filter using the .startswith function
             const books = await getBooks();
             const filteredBooks = books.filter(item => item.fields.title.toLowerCase().startsWith(letter.toLowerCase()));
-            console.log(filteredBooks);
+            //console.log(filteredBooks);
 
             if (filteredBooks.length === 0) {
-                noResultsMessage.innerText = `No results for books starting with ${letter}`;
+                //if there are no books starting with that letter, then tell user that
+                noResultsMessage.innerText = `Sorry, no results for books starting with ${letter}`;
                 noResultsMessage.style.display = "block";
+                noResultsMessage.style.justifyContent = "center";
+                noResultsMessage.style.justifyContent = "center";
+                noResultsMessage.style.backgroundColor = '#ffc107';
+                noResultsMessage.style.color = "black"; // Set text color to black
+                noResultsMessage.style.padding = "10px"; // Add some padding around the content
             } else {
                 noResultsMessage.style.display = "none";
             }
