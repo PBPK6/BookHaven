@@ -18,7 +18,47 @@
     <input type="text" id="searchInput" class="form-control" placeholder="Search for books..." style="margin:12px;">
 </div>
 
+<div class="container mt-3" style="margin: 5px;">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-group">
+                <span class="input-group-text">Book titles starting with the letter:</span>
+                <select id="letterDropdown" class="form-select" onchange="filterByLetter(this.value)">
+                    <option value="ALL">Select a letter</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                    <option value="H">H</option>
+                    <option value="I">I</option>
+                    <option value="J">J</option>
+                    <option value="K">K</option>
+                    <option value="L">L</option>
+                    <option value="M">M</option>
+                    <option value="N">N</option>
+                    <option value="O">O</option>
+                    <option value="P">P</option>
+                    <option value="Q">Q</option>
+                    <option value="R">R</option>
+                    <option value="S">S</option>
+                    <option value="T">T</option>
+                    <option value="U">U</option>
+                    <option value="V">V</option>
+                    <option value="W">W</option>
+                    <option value="X">X</option>
+                    <option value="Y">Y</option>
+                    <option value="Z">Z</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
 <table id="catalog"></table>
+<div id="noResultsMessage" class="alert alert-info" style="display:none;"></div>
 
 <script>
     async function getBooks() {
@@ -31,9 +71,40 @@
         return filteredBooks;
     }
 
-    async function refreshBooks(query = '') {
+    async function filterByLetter(letter) {
+        const noResultsMessage = document.getElementById("noResultsMessage");
+
+        if (!letter) {
+            const query = document.getElementById("searchInput").value.trim();
+            const books = query ? await searchBooks(query) : await getBooks();
+            refreshBooks(books);
+            return;
+        }
+
+        if (letter === "ALL") {
+            const books = await getBooks();
+            refreshBooks();
+        } else {
+            const books = await getBooks();
+            const filteredBooks = books.filter(item => item.fields.title.toLowerCase().startsWith(letter.toLowerCase()));
+            console.log(filteredBooks);
+
+            if (filteredBooks.length === 0) {
+                noResultsMessage.innerText = `No results for books starting with ${letter}`;
+                noResultsMessage.style.display = "block";
+            } else {
+                noResultsMessage.style.display = "none";
+            }
+
+            refreshBooks("",filteredBooks);
+        }
+    }
+
+    async function refreshBooks(query = '', books = null) {
         document.getElementById("catalog").innerHTML = ""
-        const books = await (query ? searchBooks(query) : getBooks())
+        if (!books) {
+            books = await (query ? searchBooks(query) : getBooks());
+        }
         let htmlString = `<div class="container">
             <div class="row row-cols-1 row-cols-md-4 g-4">`
         books.forEach((item) => {
@@ -61,6 +132,13 @@
     document.getElementById("searchInput").addEventListener("input", function() {
         const query = this.value.trim();
         refreshBooks(query);
+        const letterDropdown = document.getElementById("letterDropdown");
+    
+        if (query) {
+            letterDropdown.disabled = true;
+        } else {
+            letterDropdown.disabled = false;
+        }
     });
 
     async function addItemToList(itemId) {
@@ -73,6 +151,19 @@
             console.error('Failed to add the item to the cart');
         }
     }
+
+    document.getElementById("letterDropdown").addEventListener("change", function() {
+        const searchInput = document.getElementById("searchInput");
+    
+        if (this.value === "ALL") {
+            searchInput.disabled = false;
+        } else if (this.value) {
+            searchInput.disabled = true;
+        } else {
+            searchInput.disabled = false;
+        }
+    });
+    
 
     refreshBooks()
 </script>
