@@ -24,10 +24,18 @@
         word-wrap: break-word; /* This will make the text wrap within the container */
     }
 </style>
-    <h2>Edit Profile</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px;">
+            <h1 style="font-family: Helvetica, sans-serif; font-weight: bold;">Edit Profile</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <table class="custom-table" style="text-align: left;">
+                    {{ form.as_p }}
+                </table>
+                <div style="ksutify-content: center;">
+                    <button type="submit" style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

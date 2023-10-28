@@ -49,6 +49,7 @@ class RegisterForm(UserCreationForm):
     
     
 class ProfileEditForm(forms.ModelForm):
+    
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name']  # Add other fields as needed
