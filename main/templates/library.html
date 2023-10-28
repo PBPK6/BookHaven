@@ -11,22 +11,38 @@
       }
 </style>
 
-<div class="container mt-3">
+<div class="container mt-3" style="margin: 10px auto">
     <h1 style="text-align: center; margin: 12px;"> Welcome to the BookHaven Library </h1>
 </div>
-{% if user.is_superuser %}
-<a class="btn btn-danger" href="/admin/main/book/" role="button">ADD/EDIT/DELETE</a>
-{% endif %}
 
-<div class="container mt-3">
-    <input type="text" id="searchInput" class="form-control" placeholder="Search for books..." style="margin:12px;">
+<div class="container mt-3" style="margin: 10px auto">
+    <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-2 mx-auto text-center">
+            {% if user.is_superuser %}
+            <a class="btn btn-danger" href="/admin/main/book/" role="button">ADD/EDIT/DELETE</a>
+            {% endif %}
+        </div>
+        <div class="col-md-5"></div>
+    </div>
 </div>
 
-<div class="container mt-3" style="margin: 0 auto; margin-bottom: 10px;">
+<div class="container mt-3" style="margin: 10px auto">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search for books...">
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
+<div class="container" style="margin: 10px auto">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
             <div class="input-group" style="margin: 0 auto;">
-                <span class="input-group-text">Book titles starting with the letter:</span>
+                <span class="input-group-text">Title Starting Alphabet:</span>
                 <select id="letterDropdown" class="form-select" onchange="filterByLetter(this.value)">
                     <option value="ALL">Select a letter</option>
                     <option value="A">A</option>
@@ -58,6 +74,7 @@
                 </select>
             </div>
         </div>
+        <div class="col-md-4"></div>
     </div>
 </div>
 
@@ -112,10 +129,10 @@
         if (!books) {
             books = await (query ? searchBooks(query) : getBooks());
         }
-        let htmlString = `<div class="container">
-            <div class="row row-cols-1 row-cols-md-4 g-4">`
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+            <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         books.forEach((item) => {
-            htmlString += `\n<div class="col mx">
+            htmlString += `\n<div>
                 <div class="card" style="width: 300px; height: 400px;">
                     <div style="width: 100%; height: 100%; overflow: hidden;">
                         <img src="${item.fields.image_l}" style="object-fit: cover; width: 100%; height: 100%;" class="card-img-top" alt="...">

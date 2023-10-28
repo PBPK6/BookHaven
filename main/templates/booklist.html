@@ -15,10 +15,10 @@
     async function refreshBooks() {
         document.getElementById("catalog").innerHTML = ""
         const books = await getBooks()
-        let htmlString = `<div class="container">
-            <div class="row row-cols-1 row-cols-md-4 g-4">`
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+            <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         books.forEach((item) => {
-            htmlString += `\n<div class="col mx">
+            htmlString += `\n<div>
                 <div class="card" style="width: 300px; height: 400px;">
                     <div style="width: 100%; height: 100%; overflow: hidden;">
                         <img src="${item.fields.image_l}" style="object-fit: cover; width: 100%; height: 100%;" class="card-img-top" alt="...">
