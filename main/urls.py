@@ -16,5 +16,6 @@ urlpatterns = [
     path('edit/', edit_profile, name='edit'),
     path("api/books", get_books, name="get_books"),
     path('add_to_list/<int:id>', add_to_list, name="add_to_list"),
+    path('delitem/<int:id>', delItem, name='delItem'),
     path('get_user_books', get_user_books, name='get_user_books')
 ]

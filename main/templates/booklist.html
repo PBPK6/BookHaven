@@ -27,6 +27,9 @@
                         <h5 class="card-title">${item.fields.title}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-danger" onclick="deleteItem(${item.pk})">delete</button>
+                    </div>
                 </div>
             </div>` 
         })
@@ -37,5 +40,14 @@
     }
 
     refreshBooks()
+
+    async function deleteItem(itemId) {
+        const response = await fetch("/delitem/" + itemId).then(refreshBooks);
+        if (response.status === 200) {
+            console.log('Deleted item');
+        } else {
+            console.error('Failed to delete item');
+        }
+    }
 </script>
 {% endblock content %}

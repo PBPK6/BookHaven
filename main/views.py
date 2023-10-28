@@ -192,12 +192,19 @@ def add_to_list(request, id):
 
     return JsonResponse({'message': 'Book added to the list'})
 
+@login_required
+def delItem(request,id):
+    book = get_object_or_404(Book, pk=id)
+    userbook_entry, created = userbook.objects.get_or_create(user=request.user)
+    userbook_entry.books.remove(book)
+
+    return JsonResponse({'message': 'Book removed from the list'})
+
 def get_books(request):
     book = Book.objects.all()
     return HttpResponse(serializers.serialize("json",book))
 
 def get_user_books(request):
     user_books = userbook.objects.get(user=request.user)
-
     books_data = user_books.books.all()
     return HttpResponse(serializers.serialize("json",books_data))
