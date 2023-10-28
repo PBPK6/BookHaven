@@ -7,18 +7,38 @@
 {% block content %}  
 <style>
     body {
-        background-color: #a73121;
+        background-image: linear-gradient(to right, #0174be , #ffc436);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .custom-table {
+        background-color: #FFC436; /* Set the desired background color */
+        border-collapse: separate; 
+        border-spacing: 10px;
+    }
+    tr {
+        margin-bottom: 10px; /* Adjust this value to set the desired spacing */
+        padding-bottom: 10px;
+    }
+    li {
+        word-wrap: break-word; /* This will make the text wrap within the container */
     }
 </style>
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <div class="login" style="text-align: center; border: 1px solid #ccc; padding: 20px; border-radius: 5px; background-color: #f8f8f8;">
+    <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px;">
         <h1 style="font-family: Helvetica, sans-serif; font-weight: bold;">Register</h1>
         <form method="POST">
             {% csrf_token %}
-            <table>
+            <table class="custom-table" style="text-align: left;">
                 {{ form.as_table }}
             </table>
-            <button style="margin-top: 10px;"><input type="submit" name="submit" value="Daftar" class="btn register_btn"></button>
+            <div style="ksutify-content: center;">
+            <button style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;"><input type="submit" name="submit" value="Daftar" style="background-color: #0174BE; color: #f8f8f8; border: 0px; justify-content: center;"></button>
+            </div>
         </form>
 
         {% if messages %}

@@ -51,7 +51,7 @@ class RegisterForm(UserCreationForm):
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']  # Add other fields as needed
+        fields = ['username', 'email', 'first_name']  # Add other fields as needed
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -144,6 +144,7 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
 
 @login_required
 def edit_profile(request):

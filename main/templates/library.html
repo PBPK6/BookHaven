@@ -62,7 +62,7 @@
 </div>
 
 <table id="catalog" style="margin: 0 auto;"></table>
-<div id="noResultsMessage" style="font-size: 24px; text-align: center; display:none; justifyContent: center; backgroundColor: yellowochre;"></div>
+<div id="noResultsMessage" style="display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: yellowochre;"></div>
 
 <script>
     async function getBooks() {
@@ -83,6 +83,7 @@
         if (letter === "ALL") {
             //If the user sets the search letter to no letters, then display all books
             const books = await getBooks();
+            noResultsMessage.style.display = "none";
             refreshBooks();
         } else {
             //If the user requests a letter, then wait to get all books then filter using the .startswith function
@@ -125,7 +126,7 @@
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
                     <div class="card-footer">
-                        <button type="button" class="btn btn-outline-success" onclick="addItemToList(${item.pk})">Add</button>
+                        <button type="button" class="btn btn-primary" onclick="addItemToList(${item.pk})">Add</button>
                     </div>
                 </div>
             </div>` 

@@ -1,6 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    body {
+        background-image: linear-gradient(to right, #0174be , #ffc436);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .custom-table {
+        background-color: #FFC436; /* Set the desired background color */
+        border-collapse: separate; 
+        border-spacing: 10px;
+    }
+    tr {
+        margin-bottom: 10px; /* Adjust this value to set the desired spacing */
+        padding-bottom: 10px;
+    }
+    li {
+        word-wrap: break-word; /* This will make the text wrap within the container */
+    }
+</style>
     <h2>Edit Profile</h2>
     <form method="post">
         {% csrf_token %}
