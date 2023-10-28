@@ -13,6 +13,11 @@
 {% if user.is_superuser %}
 <a class="btn btn-danger" href="/admin/main/book/" role="button">ADD/EDIT/DELETE</a>
 {% endif %}
+
+<div class="container mt-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search for books..." style="margin:12px;">
+</div>
+
 <table id="catalog"></table>
 
 <script>
@@ -20,9 +25,15 @@
         return fetch("{% url 'main:get_books' %}").then((res) => res.json())
     }
 
-    async function refreshBooks() {
+    async function searchBooks(query) {
+        const books = await getBooks();
+        const filteredBooks = books.filter(item => item.fields.title.toLowerCase().includes(query.toLowerCase()));
+        return filteredBooks;
+    }
+
+    async function refreshBooks(query = '') {
         document.getElementById("catalog").innerHTML = ""
-        const books = await getBooks()
+        const books = await (query ? searchBooks(query) : getBooks())
         let htmlString = `<div class="container">
             <div class="row row-cols-1 row-cols-md-4 g-4">`
         books.forEach((item) => {
@@ -47,7 +58,10 @@
         document.getElementById("catalog").innerHTML = htmlString
     }
 
-    refreshBooks()
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.trim();
+        refreshBooks(query);
+    });
 
     async function addItemToList(itemId) {
         const response = await fetch("/add_to_list/" + itemId);
@@ -59,6 +73,8 @@
             console.error('Failed to add the item to the cart');
         }
     }
+
+    refreshBooks()
 </script>
 
 {% endblock content %}
