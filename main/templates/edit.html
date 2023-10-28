@@ -1,10 +1,41 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Edit Profile</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
+<style>
+    body {
+        background-image: linear-gradient(to right, #0174be , #ffc436);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    .custom-table {
+        background-color: #FFC436; /* Set the desired background color */
+        border-collapse: separate; 
+        border-spacing: 10px;
+    }
+    tr {
+        margin-bottom: 10px; /* Adjust this value to set the desired spacing */
+        padding-bottom: 10px;
+    }
+    li {
+        word-wrap: break-word; /* This will make the text wrap within the container */
+    }
+</style>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px;">
+            <h1 style="font-family: Helvetica, sans-serif; font-weight: bold;">Edit Profile</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <table class="custom-table" style="text-align: left;">
+                    {{ form.as_p }}
+                </table>
+                <div style="ksutify-content: center;">
+                    <button type="submit" style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
