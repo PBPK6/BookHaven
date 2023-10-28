@@ -2,6 +2,14 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+<style>
+    body{
+        background-color: #F2E8C6;
+      }
+      .h-100{
+        background-color: #A73121;
+      }
+</style>
 <div class="container mt-3" style="margin: 10px auto">
     <h1 style="text-align: center; margin: 12px;">Booklist:</h1>
 </div>
@@ -16,16 +24,33 @@
     </div>
 </div>
 
+<div class="container mt-3" style="margin: 10px auto">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search through your books...">
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
 <table id="catalog" style="margin: 0 auto;"></table>
 
 <script>
-    async function getBooks() {
+    async function getBooks() { //Get userbooks
         return fetch("{% url 'main:get_user_books' username=user %}").then((res) => res.json())
     }
 
-    async function refreshBooks() {
+    async function searchBooks(query) { //Filter function
+        const books = await getBooks();
+        const filteredBooks = books.filter(item => item.fields.title.toLowerCase().includes(query.toLowerCase()));
+        //The ".includes" function means that it will scan the field 'title' to see if it contains the string inputted by the user 
+        return filteredBooks;
+        //Return the resulting filtered
+    }
+    async function refreshBooks(query = '') { 
         document.getElementById("catalog").innerHTML = ""
-        const books = await getBooks()
+        books = await (query ? searchBooks(query) : getBooks());
         let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
             <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         books.forEach((item) => {
@@ -52,15 +77,22 @@
         document.getElementById("catalog").innerHTML = htmlString
     }
 
-    refreshBooks()
 
     async function deleteItem(itemId) {
-        const response = await fetch("/delitem/" + itemId).then(refreshBooks);
+        const response = await fetch("/delitem/" + itemId)
+        refreshBooks();
         if (response.status === 200) {
             console.log('Deleted item');
         } else {
             console.error('Failed to delete item');
         }
     }
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.trim();
+        refreshBooks(query);
+    });
+
+    refreshBooks()
 </script>
 {% endblock content %}
