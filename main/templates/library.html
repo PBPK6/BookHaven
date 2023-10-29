@@ -12,12 +12,11 @@
         border-radius: 6px;
         padding: 8px 0;
         margin:25px;
-        position: fixed; /* Change position to fixed */
+        position: fixed; /* Change position to fixed no matter the screen size*/
         bottom: 0; /* Align to the bottom */
         left: 0; /* Align to the left */
         opacity: 0; /* Set initial opacity to 0 */
-        transition: opacity 0.5s;
-        z-index: 100;
+        z-index: 100;/* This will make the popup on the topmost layer of elements */
         background-color: #0174BE;
       }
       .btn .show {
@@ -52,12 +51,13 @@
         <div class="col-md-5"></div>
     </div>
 </div>
-
-<div class="container mt-3" style="margin: 10px auto">
+ 
+<div class="container mt-3" style="margin: 10px auto"> <!-- Async search bar -->
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search for books...">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search for books..."> 
+            <!-- Will be looked for by event listener in js -->
         </div>
         <div class="col-md-4"></div>
     </div>
@@ -71,6 +71,7 @@
                 <span class="input-group-text">Title Starting Alphabet:</span>
                 <select id="letterDropdown" class="form-select" onchange="filterByLetter(this.value)">
                     <option value="ALL">Select a letter</option>
+                    <!-- option for all letters -->
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -105,7 +106,7 @@
 </div>
 
 <table id="catalog" style="margin: 0 auto;"></table>
-<div id="noResultsMessage" style="display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: yellowochre;"></div>
+<div id="noResultsMessage" style="display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: #0174BE;"></div>
 
 <script>
     async function getBooks() {
