@@ -1,4 +1,9 @@
 # 📖 Book Haven
+
+[tests]: https://github.com/PBPK6/BookHaven/actions/workflows/test.yml/badge.svg?branch=main
+[production deployment tag]: https://github.com/PBPK6/BookHaven/actions/workflows/pbp-deploy.yml/badge.svg?branch=main
+[link to site]: http://bookhaven-k6-tk.pbp.cs.ui.ac.id
+
 ## 👨‍💻Group members
 - Clayton Ismail Nagle --- 2206021951
 - Mochammad Ezar Yudha --- 2206046746
