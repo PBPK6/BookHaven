@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block meta %}
+    <link rel="icon" href="https://i.imgur.com/M3JXpkW.png?1" type="image/png">
+    <title>BookHaven • {{ user.first_name }}'s Booklist</title>
+{% endblock meta %}
+
+
 {% block content %}
 {% include 'navbar.html' %}
 <style>
