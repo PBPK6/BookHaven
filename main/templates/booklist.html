@@ -9,13 +9,22 @@
 {% block content %}
 {% include 'navbar.html' %}
 <style>
-    body{
-        background-color: #F2E8C6;
-    }
     .h-100{
         background-color: #A73121;
     }
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #F2E8C6;
+    }
+    .content {
+        flex: 1;
+    }
 </style>
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -47,6 +56,7 @@
         </div>
     </div>
 </div>
+<div class="content">
 <div class="container mt-3" style="margin: 10px auto">
     <h1 style="text-align: center; margin: 12px;">Booklist:</h1>
 </div>
@@ -74,7 +84,7 @@
 </div>
 
 <table id="catalog" style="margin: 0 auto;"></table>
-
+</div>
 {% include 'footer.html' %}
 <script>
     async function getBooks() { //Get userbooks

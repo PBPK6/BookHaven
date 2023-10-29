@@ -9,9 +9,6 @@
 {% include 'navbar.html' %}
 
 <style>
-    body{
-      background-color: #F2E8C6;
-    }
     .h-100{
       background-color: #A73121;
     }
@@ -21,13 +18,19 @@
       font-family: Arial, sans-serif; /* Change the font style */
       margin-top: 10px;
     }
-    .overflow-ellipsis {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #F2E8C6;
+  }
+  .content {
+      flex: 1;
+  }
   </style>
-
+<div class="content">
 <h1>Recent Book Reviews:</h1>
 <div class="container mt-3" style="margin: 10px auto">
   <div class="row">
@@ -53,6 +56,7 @@
   </div>
 </div>
 <table id="review_table"></table>
+</div>
 {% include 'footer.html' %}
 <script>
     refreshProducts()
