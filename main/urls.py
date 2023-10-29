@@ -17,5 +17,9 @@ urlpatterns = [
     path("api/books", get_books, name="get_books"),
     path('add_to_list/<int:id>', add_to_list, name="add_to_list"),
     path('delitem/<int:id>', delItem, name='delItem'),
-    path('get_user_books/<str:username>', get_user_books, name='get_user_books')
+    path('get_user_books/<str:username>', get_user_books, name='get_user_books'),
+    path('addReview/<int:id>', addReview, name='addReview'),
+    path('getReviewsJson/', getReviewsJson, name='getReviewsJson'),
+    path('reviews/', reviews, name='reviews'),
+    path('json/', show_json, name='show_json'),
 ]

@@ -14,3 +14,11 @@ class Book(models.Model):
 class userbook(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     books = models.ManyToManyField(Book)
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.TextField(null=True, blank=True)
+    book = models.TextField(null=True, blank=True)
+    rate = models.IntegerField(null=True, blank=True)
+    review = models.TextField(null= True)
+    date = models.DateField(null= True, blank=True, auto_now_add=True)

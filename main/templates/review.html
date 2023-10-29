@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<style>
+    body{
+      background-color: #F2E8C6;
+    }
+    .h-100{
+      background-color: #A73121;
+    }
+    h1{
+      text-align: center; /* Center the h1 element */
+      font-weight: bold; /* Make the text bold */
+      font-family: Arial, sans-serif; /* Change the font style */
+      margin-top: 10px;
+    }
+  </style>
+
+<h1>Recent Book Reviews:</h1>
+<div>
+
+<table id="review_table"></table>
+<script>
+    async function getReviews() {
+        return fetch("{% url 'main:getReviewsJson' %}").then((res) => res.json())
+    }
+    async function refreshProducts() {
+        document.getElementById("review_table").innerHTML = ""
+        const products = await getReviews()
+        let htmlString = `<tr>
+            <th>User</th>
+            <th>Title</th>
+            <th>Rate</th>
+            <th>Review</th>
+            <th>Date Added</th>
+        </tr>`
+        products.forEach((review) => {
+            htmlString += `\n<tr>
+            <td>${review.fields.username}</td>
+            <td>${review.fields.book}</td>
+            <td>${review.fields.rate}</td>
+            <td>${review.fields.review}</td>
+            <td>${review.fields.date}</td>
+        </tr>` 
+        })
+        
+        document.getElementById("review_table").innerHTML = htmlString
+    }
+
+    refreshProducts()
+</script>
+{% endblock content %}
