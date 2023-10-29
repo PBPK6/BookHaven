@@ -3,10 +3,32 @@
 {% block content %}
 {% include 'lib_navbar.html' %}
 <style>
+      /* The actual popup (appears on top) */
+      .btn .popuptext {
+        visibility: hidden;
+        width: 160px;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 0;
+        margin:25px;
+        position: fixed; /* Change position to fixed no matter the screen size*/
+        bottom: 0; /* Align to the bottom */
+        left: 0; /* Align to the left */
+        opacity: 0; /* Set initial opacity to 0 */
+        z-index: 100;/* This will make the popup on the topmost layer of elements */
+        background-color: #0174BE;
+      }
+      .btn .show {
+        visibility: visible;
+        -webkit-animation: fadeIn 1s;
+        opacity: 1;
+        animation: fadeIn 1s
+      }
     body{
         background-color: #F2E8C6;
-      }
-      .h-100{
+    }
+    .h-100{
         background-color: #A73121;
       }
       .card {
@@ -29,12 +51,13 @@
         <div class="col-md-5"></div>
     </div>
 </div>
-
-<div class="container mt-3" style="margin: 10px auto">
+ 
+<div class="container mt-3" style="margin: 10px auto"> <!-- Async search bar -->
     <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-4">
-            <input type="text" id="searchInput" class="form-control" placeholder="Search for books...">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search for books..."> 
+            <!-- Will be looked for by event listener in js -->
         </div>
         <div class="col-md-4"></div>
     </div>
@@ -48,6 +71,7 @@
                 <span class="input-group-text">Title Starting Alphabet:</span>
                 <select id="letterDropdown" class="form-select" onchange="filterByLetter(this.value)">
                     <option value="ALL">Select a letter</option>
+                    <!-- option for all letters -->
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -82,7 +106,9 @@
 </div>
 
 <table id="catalog" style="margin: 0 auto;"></table>
-<div id="noResultsMessage" style="display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: yellowochre;"></div>
+<div id="noResultsMessage" style="margin-top: 10px; margin-right: 10%; margin-left: 10%; display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: #0174BE;"></div>
+
+{% include 'footer.html' %}
 
 <script>
     async function getBooks() {
@@ -146,7 +172,9 @@
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
                     <div class="card-footer">
-                        <button type="button" class="btn btn-primary" onclick="addItemToList(${item.pk})">Add</button>
+                        <button type="button" class="btn" style="background-color: #0174BE; color: #fff;" onclick="addItemToList(${item.pk})"> Add 
+                            <span class="popuptext" id="myPopup"> Book added </span>
+                        </button>
                     </div>
                 </div>
             </div>` 
@@ -174,6 +202,7 @@
         if (response.status === 200) {
             // Handle success, e.g., show a message to the user
             console.log('Item added to the cart');
+            myFunction();
         } else {
             // Handle any errors or show an error message
             console.error('Failed to add the item to the cart');
@@ -194,6 +223,15 @@
     
 
     refreshBooks()
+
+    function myFunction() {
+        var popup = document.getElementById("myPopup");
+        popup.classList.add("show"); // Show the popup
+
+        setTimeout(function() {
+            popup.classList.remove("show"); // Remove the 'show' class after 2 seconds
+        }, 2000);
+      }
 </script>
 
 {% endblock content %}

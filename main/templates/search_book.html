@@ -5,10 +5,10 @@
 <style>
     body{
         background-color: #F2E8C6;
-      }
-      .h-100{
+    }
+    .h-100{
         background-color: #A73121;
-      }
+    }
 </style>
 
 {% if Books %}
@@ -42,4 +42,5 @@
     <h1> No results found for: {{ Searched }} </h1>
 
 {% endif %}
+{% include 'footer.html' %}
 {% endblock content %}

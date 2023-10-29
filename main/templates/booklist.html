@@ -5,10 +5,10 @@
 <style>
     body{
         background-color: #F2E8C6;
-      }
-      .h-100{
+    }
+    .h-100{
         background-color: #A73121;
-      }
+    }
 </style>
 <div class="container mt-3" style="margin: 10px auto">
     <h1 style="text-align: center; margin: 12px;">Booklist:</h1>
@@ -36,6 +36,7 @@
 
 <table id="catalog" style="margin: 0 auto;"></table>
 
+{% include 'footer.html' %}
 <script>
     async function getBooks() { //Get userbooks
         return fetch("{% url 'main:get_user_books' username=user %}").then((res) => res.json())
