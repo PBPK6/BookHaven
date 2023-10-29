@@ -16,16 +16,39 @@
       font-family: Arial, sans-serif; /* Change the font style */
       margin-top: 10px;
     }
+    .overflow-ellipsis {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   </style>
 
 <h1>Recent Book Reviews:</h1>
-<div>
-    <div class="d-grid gap-2 col-4 mx-auto">
-    <button type="button" class="btn btn-primary" id="button_add1" data-bs-dismiss="modal">Earliest</button>
-    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Latest</button>
-    </div>
-
+<div class="container mt-3" style="margin: 10px auto">
+  <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-2 mx-auto text-center">
+          {% if user.is_superuser %}
+          <a class="btn btn-danger" href="/admin/main/review/" role="button">Manage Reviews</a>
+          {% endif %}
+      </div>
+      <div class="col-md-5"></div>
+  </div>
+</div>
+<div class="container mt-3" style="margin: 10px auto">
+  <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-1 mx-auto text-center">
+        <button type="button" class="btn btn-primary" id="button_add1" data-bs-dismiss="modal">Earliest</button>
+      </div>
+      <div class="col-md-1 mx-auto text-center">
+        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Latest</button>
+      </div>
+      <div class="col-md-5"></div>
+  </div>
+</div>
 <table id="review_table"></table>
+{% include 'footer.html' %}
 <script>
     refreshProducts()
     async function getReviews() {
@@ -37,25 +60,21 @@
     async function refreshProducts() {
         document.getElementById("review_table").innerHTML = ""
         const products = await getReverse()
-        let htmlString = `<div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-3">`
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+          <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         products.forEach((item) => {
-            htmlString += ` 
-            <div class="col">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">${item.fields.username}</h6>
-                <p class="card-text">${item.fields.review}</p>
-                <div>
-                {% if user.is_superuser %}
-                        <a class="btn btn-danger" href="/admin/main/review/" role="button">ADD/EDIT/DELETE</a>
-                    {% endif %}    
+            htmlString += `\n<div>
+              <div class="card" style="width: 400px; height: 250px; max-width: 400px; max-height: 250px; overflow: auto;">
+                  <div class="card-body">
+                      <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">${item.fields.username}</h6>
+                      <p class="card-text">${item.fields.review}</p>
                   </div>
-            </div>
-            </div>
-            </div>`
+              </div>
+          </div>`
         })
-        htmlString += "</div>"
+        htmlString += `\n</div>
+      </div>`
         document.getElementById("review_table").innerHTML = htmlString
     }
     document.getElementById("button_add1").onclick = refreshProducts
@@ -63,21 +82,21 @@
     async function refreshReverse() {
         document.getElementById("review_table").innerHTML = ""
         const products = await getReviews()
-        let htmlString = ``
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+          <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         products.forEach((item) => {
-            htmlString = ` 
-            <div class="col">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">${item.fields.username}</h6>
-                <p class="card-text">${item.fields.review}</p>
+            htmlString += `\n<div>
+              <div class="card" style="width: 200px; height: 200px;">
+                  <div class="card-body">
+                      <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">${item.fields.username}</h6>
+                      <p class="card-text">${item.fields.review}</p>
+                  </div>
               </div>
-            </div>
-            </div> ${htmlString}`
+          </div>`
         })
-        htmlString = `<div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-3"> ${htmlString}`
-        htmlString += "</div>"
+        htmlString += `\n</div>
+      </div>`
         document.getElementById("review_table").innerHTML = htmlString
     }
     document.getElementById("button_add").onclick = refreshReverse

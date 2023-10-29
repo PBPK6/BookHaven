@@ -14,7 +14,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Review</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -36,7 +36,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Review</button>
             </div>
         </div>
     </div>
@@ -48,13 +48,15 @@
 <div class="container mt-3" style="margin: 10px auto">
     <div class="row">
         <div class="col-md-5"></div>
-        <div class="col-md-2 mx-auto text-center">
+        <div class="col-md-1 mx-auto text-center">
             <a class="btn btn-primary" href="{% url 'main:library' %}" role="button">Add Book</a>
+        </div>
+        <div class="col-md-1 mx-auto text-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Review</button>
         </div>
         <div class="col-md-5"></div>
     </div>
 </div>
-
 <div class="container mt-3" style="margin: 10px auto">
     <div class="row">
         <div class="col-md-4"></div>
@@ -98,7 +100,6 @@
                     {% if request.user == user %}
                     <div class="card-footer">
                         <button type="button" class="btn btn-outline-danger" onclick="deleteItem(${item.pk})">Delete</button>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
                     </div>
                     {% endif %}
                 </div>
@@ -114,7 +115,7 @@
         fetch("{% url 'main:addReview' %}", {
             method: "POST",
             body: new FormData(document.querySelector('#form'))
-        }).then(refreshProducts)
+        })
 
         document.getElementById("form").reset()
         return false
