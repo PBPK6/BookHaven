@@ -207,3 +207,33 @@ def get_user_books(request, username):
     user_books = userbook.objects.get(user=user)
     books_data = user_books.books.all()
     return HttpResponse(serializers.serialize("json",books_data))
+
+def addReview(request):
+    if request.method == 'POST':
+        user = request.user
+        username = request.user.username
+        rate = request.POST.get("rate")
+        review = request.POST.get("review")
+        book = request.POST.get("book")
+
+        new_item = Review(rate=rate, review=review, book=book, user=user, username=username)
+        new_item.save()
+        print(user, rate, review, book)
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+def getReviewsJson(request):
+    reviewItems = Review.objects.all()
+    return HttpResponse(serializers.serialize('json', reviewItems))
+
+def reviews(request):
+    items =  Review.objects.all()
+    context = {
+        'items': items
+    }
+    return render(request, "review.html", context)
+
+def show_json(request):
+    data = Review.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")

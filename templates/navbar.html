@@ -17,6 +17,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'main:booklist' username=user %}">Booklist</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'main:reviews' %}">Reviews</a>
+                </li>
             </ul>
             <form class="d-flex" role="search" method=GET action="{% url 'main:search_book' %}">
                 <input class="form-control me-2" type="search" placeholder="Search library..." aria-label="Search" name = "Searched">

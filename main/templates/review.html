@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<style>
+    body{
+      background-color: #F2E8C6;
+    }
+    .h-100{
+      background-color: #A73121;
+    }
+    h1{
+      text-align: center; /* Center the h1 element */
+      font-weight: bold; /* Make the text bold */
+      font-family: Arial, sans-serif; /* Change the font style */
+      margin-top: 10px;
+    }
+  </style>
+
+<h1>Recent Book Reviews:</h1>
+<div>
+    <div class="d-grid gap-2 col-4 mx-auto">
+    <button type="button" class="btn btn-primary" id="button_add1" data-bs-dismiss="modal">Earliest</button>
+    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Latest</button>
+    </div>
+
+<table id="review_table"></table>
+<script>
+    refreshProducts()
+    async function getReviews() {
+        return fetch("{% url 'main:getReviewsJson' %}").then((res) => res.json())
+    }
+    async function getReverse() {
+        return fetch("{% url 'main:getReviewsJson' %}").then((res) => res.json())
+    }
+    async function refreshProducts() {
+        document.getElementById("review_table").innerHTML = ""
+        const products = await getReverse()
+        let htmlString = `<div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-3">`
+        products.forEach((item) => {
+            htmlString += ` 
+            <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">${item.fields.username}</h6>
+                <p class="card-text">${item.fields.review}</p>
+                <div>
+                {% if user.is_superuser %}
+                        <a class="btn btn-danger" href="/admin/main/review/" role="button">ADD/EDIT/DELETE</a>
+                    {% endif %}    
+                  </div>
+            </div>
+            </div>
+            </div>`
+        })
+        htmlString += "</div>"
+        document.getElementById("review_table").innerHTML = htmlString
+    }
+    document.getElementById("button_add1").onclick = refreshProducts
+
+    async function refreshReverse() {
+        document.getElementById("review_table").innerHTML = ""
+        const products = await getReviews()
+        let htmlString = ``
+        products.forEach((item) => {
+            htmlString = ` 
+            <div class="col">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">${item.fields.username}</h6>
+                <p class="card-text">${item.fields.review}</p>
+              </div>
+            </div>
+            </div> ${htmlString}`
+        })
+        htmlString = `<div class="row row-cols-1 row-cols-md-4 g-4 mx-4 my-3"> ${htmlString}`
+        htmlString += "</div>"
+        document.getElementById("review_table").innerHTML = htmlString
+    }
+    document.getElementById("button_add").onclick = refreshReverse
+</script>
+{% endblock content %}
