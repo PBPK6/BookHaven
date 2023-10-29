@@ -2,10 +2,15 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+<style>
+    body{
+        background-color: #F2E8C6;
+    }
+</style>
 {% if Books %}
-<h1> Search results for: {{ Searched }} </h1>
+<h1 style="margin-top: 10px;text-align: center;"> Search results for: {{ Searched }} </h1>
 <br/>
-<div class="container">
+<div class="container" style="height: 100%;">
   <div class="row row-cols-1 row-cols-md-4 g-4">
   {% for item in Books %}
       <div class="col mx">
@@ -30,4 +35,5 @@
     <h1> No results found for: {{ Searched }} </h1>
 
 {% endif %}
+{% include 'footer.html' %}
 {% endblock content %}

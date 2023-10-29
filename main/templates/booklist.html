@@ -23,6 +23,7 @@
 
 <table id="catalog" style="margin: 0 auto;"></table>
 
+{% include 'footer.html' %}
 <script>
     async function getBooks() {
         return fetch("{% url 'main:get_user_books' username=user %}").then((res) => res.json())
