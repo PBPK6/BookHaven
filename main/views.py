@@ -93,11 +93,15 @@ def library(request):
     return render(request, "library.html", context)
 
 def booklist(request, username):
-    items =  Book.objects.all()
-    user = User.objects.get(username=username)
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return render(request, "user_not_found.html")
+
+    items = Book.objects.all()
     context = {
         'items': items,
-        'user' : user,
+        'user': user,
     }
     return render(request, "booklist.html", context)
 
