@@ -177,16 +177,6 @@ def search_book(request):
             
         # }
         # return render(request, 'search_book.html', context)
-    
-def create_book(request):
-    form = BookForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return HttpResponseRedirect(reverse('main:show_main'))
-
-    context = {'form': form}
-    return render(request, "create_book.html", context)
 
 @login_required
 def add_to_list(request, id):
