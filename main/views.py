@@ -20,11 +20,10 @@ from main.models import *
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(label = "Email")
     fullname = forms.CharField(label = "Full")
-    role = forms.ChoiceField(choices=(('R', 'Reader'), ('A', 'Admin')), required=True)
 
     class Meta:
         model = User
-        fields = ("username", "fullname", "email", 'role', 'password1', 'password2')
+        fields = ("username", "fullname", "email", 'password1', 'password2')
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,7 +40,6 @@ class RegisterForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         user.password = self.cleaned_data["password1"]
         user.set_password(user.password)
-        user.role = self.cleaned_data["role"] 
         user.save()
         #print(user.role)
         return user
