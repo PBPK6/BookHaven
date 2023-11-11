@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <link rel="icon" href="https://i.imgur.com/M3JXpkW.png?1" type="image/png">
+    <title>BookHaven • Review</title>
+{% endblock meta %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<style>
+    .h-100{
+      background-color: #A73121;
+    }
+    h1{
+      text-align: center; /* Center the h1 element */
+      font-weight: bold; /* Make the text bold */
+      font-family: Arial, sans-serif; /* Change the font style */
+      margin-top: 10px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #F2E8C6;
+  }
+  .content {
+      flex: 1;
+  }
+  </style>
+<div class="content">
+<h1>Recent Book Reviews:</h1>
+<div class="container mt-3" style="margin: 10px auto">
+  <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-2 mx-auto text-center">
+          {% if user.is_superuser %}
+          <a class="btn btn-danger" href="/admin/main/review/" role="button">Manage Reviews</a>
+          {% endif %}
+      </div>
+      <div class="col-md-5"></div>
+  </div>
+</div>
+<div class="container mt-3" style="margin: 10px auto">
+  <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-1 mx-auto text-center">
+        <button type="button" class="btn btn-primary" id="button_add1" data-bs-dismiss="modal">Earliest</button>
+      </div>
+      <div class="col-md-1 mx-auto text-center">
+        <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Latest</button>
+      </div>
+      <div class="col-md-5"></div>
+  </div>
+</div>
+<table id="review_table"></table>
+</div>
+{% include 'footer.html' %}
+<script>
+    refreshProducts()
+    async function getReviews() {
+        return fetch("{% url 'main:getReviewsJson' %}").then((res) => res.json())
+    }
+    async function getReverse() {
+        return fetch("{% url 'main:getReviewsJson' %}").then((res) => res.json())
+    }
+    async function refreshProducts() {
+        document.getElementById("review_table").innerHTML = ""
+        const products = await getReverse()
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+          <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
+        products.forEach((item) => {
+            htmlString += `\n<div>
+              <div class="card" style="width: 400px; height: 250px; max-width: 400px; max-height: 250px; overflow: auto;">
+                  <div class="card-body">
+                      <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">${item.fields.username}</h6>
+                      <p class="card-text">${item.fields.review}</p>
+                  </div>
+              </div>
+          </div>`
+        })
+        htmlString += `\n</div>
+      </div>`
+        document.getElementById("review_table").innerHTML = htmlString
+    }
+    document.getElementById("button_add1").onclick = refreshProducts
+
+    async function refreshReverse() {
+        document.getElementById("review_table").innerHTML = ""
+        const products = await getReviews()
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+          <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
+        products.forEach((item) => {
+            htmlString += `\n<div>
+              <div class="card" style="width: 200px; height: 200px;">
+                  <div class="card-body">
+                      <h5 class="card-title">${item.fields.book} - ${item.fields.rate}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">${item.fields.username}</h6>
+                      <p class="card-text">${item.fields.review}</p>
+                  </div>
+              </div>
+          </div>`
+        })
+        htmlString += `\n</div>
+      </div>`
+        document.getElementById("review_table").innerHTML = htmlString
+    }
+    document.getElementById("button_add").onclick = refreshReverse
+</script>
+{% endblock content %}

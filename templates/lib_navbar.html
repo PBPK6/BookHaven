@@ -21,10 +21,6 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'main:reviews' %}">Reviews</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search" method=GET action="{% url 'main:search_book' %}">
-                <input class="form-control me-2" type="search" placeholder="Search library..." aria-label="Search" name = "Searched">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
             <li class="nav-item navbar-nav dropdown ms-2">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Hello, {{ user.first_name }}

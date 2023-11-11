@@ -1,4 +1,14 @@
 # 📖 Book Haven
+
+[tests tag]: https://github.com/PBPK6/BookHaven/actions/workflows/test.yml/badge.svg?branch=main
+[production deployment tag]: https://github.com/PBPK6/BookHaven/actions/workflows/pbp-deploy.yml/badge.svg?branch=main
+[site link]: http://bookhaven-k6-tk.pbp.cs.ui.ac.id
+
+![Tests Tag]
+![Production Deployment Tag]
+
+[site link]
+
 ## 👨‍💻Group members
 - Clayton Ismail Nagle --- 2206021951
 - Mochammad Ezar Yudha --- 2206046746
@@ -59,3 +69,6 @@ For this project, we utilized the [Book Recommendation Dataset](https://www.kagg
 - Mochammad Ezar Yudha --- Reviews and Ratings, Book features
 - Gusti Faturahman Rais --- Login, Register and Edit Profile
 - Alfian Fadhlurrahman --- Add Book, Book Details
+
+## Post-Project
+There are some changes that we made while working on the project, what we changed is the implementation of genres. You will see that our project does not include genres attached to the books and as a result, all features pertaining to genre are not considered. Furthermore, we scrapped the role of writer in our project, so to register is automatically a reader and can do all the things reader should. Adding books role has moved to admin.

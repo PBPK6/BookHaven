@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-    <title>Login</title>
+    <link rel="icon" href="https://i.imgur.com/M3JXpkW.png?1" type="image/png">
+    <title>BookHaven • Login</title>
 {% endblock meta %}
 
 {% block content %}
@@ -32,7 +33,7 @@ li {
     <h1 style="font-family: Roboto, Corbel, Avenir; font-size: 72px; text-align: center;">Welcome to Bookhaven</h1>
 </div>
 
-    <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px; text-align: left;">
+    <div class="login" style="margin: 40px; text-align: center; justify-content: center; align-items: center; padding: 20px; border-radius: 10px; background-color: #FFC436; max-width: 600px;">
         <h2 style="font-family: Helvetica, sans-serif; font-weight: bold; text-align: center;">Login</h2>
         <form method="POST" style="text-align: center; padding: 5px; border-radius: 10px; justify-content: center; align-items: center; border:none;" action="">
             {% csrf_token %}
@@ -46,7 +47,7 @@ li {
                     <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
                 </tr>
             </table>
-            <button style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;" onmouseover="this.style.background-color='#0174BE';" onmouseout="this.style.backgroundColor='#0174BE'; this.style.color='#FFC436';"><input class="btn login_btn" type="submit" value="Login"></button>
+            <button style="height: 40px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff;"><input style="background-color: #0174BE; color: #f8f8f8; border: 0px; justify-content: center;" type="submit" value="Login"></button>
             
         </form>
         <a href="{% url 'main:register' %}"> <button style="height: 40px; margin-top: 10px; padding: 10px; border-radius: 10px; justify-content: center; align-items: center; border:none; background-color: #0174BE; color: #fff; text-align: center;"> Register Now </button></a>

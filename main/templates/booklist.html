@@ -1,24 +1,110 @@
 {% extends 'base.html' %}
 
+{% block meta %}
+    <link rel="icon" href="https://i.imgur.com/M3JXpkW.png?1" type="image/png">
+    <title>BookHaven • {{ user.first_name }}'s Booklist</title>
+{% endblock meta %}
+
+
 {% block content %}
 {% include 'navbar.html' %}
-<h1>Booklist:</h1>
-<a class="btn btn-primary" href="{% url 'main:library' %}" role="button">Add Book</a>
+<style>
+    .h-100{
+        background-color: #A73121;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #F2E8C6;
+    }
+    .content {
+        flex: 1;
+    }
+</style>
 
-<table id="catalog"></table>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Review</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="book" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="book" name="book"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="rate" class="col-form-label">Rate:</label>
+                        <input type="number" class="form-control" id="rate" name="rate"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="review" class="col-form-label">Review:</label>
+                        <textarea class="form-control" id="review" name="review"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Review</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+<div class="container mt-3" style="margin: 10px auto">
+    <h1 style="text-align: center; margin: 12px;">Booklist:</h1>
+</div>
 
+<div class="container mt-3" style="margin: 10px auto">
+    <div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-1 mx-auto text-center">
+            <a class="btn btn-primary" href="{% url 'main:library' %}" role="button">Add Book</a>
+        </div>
+        <div class="col-md-1 mx-auto text-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Review</button>
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+</div>
+<div class="container mt-3" style="margin: 10px auto">
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search through your books...">
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
+<table id="catalog" style="margin: 0 auto;"></table>
+</div>
+{% include 'footer.html' %}
 <script>
-    async function getBooks() {
-        return fetch("{% url 'main:get_user_books' %}").then((res) => res.json())
+    async function getBooks() { //Get userbooks
+        return fetch("{% url 'main:get_user_books' username=user %}").then((res) => res.json())
     }
 
-    async function refreshBooks() {
+    async function searchBooks(query) { //Filter function
+        const books = await getBooks();
+        const filteredBooks = books.filter(item => item.fields.title.toLowerCase().includes(query.toLowerCase()));
+        //The ".includes" function means that it will scan the field 'title' to see if it contains the string inputted by the user 
+        return filteredBooks;
+        //Return the resulting filtered
+    }
+    async function refreshBooks(query = '') { 
         document.getElementById("catalog").innerHTML = ""
-        const books = await getBooks()
-        let htmlString = `<div class="container">
-            <div class="row row-cols-1 row-cols-md-4 g-4">`
+        books = await (query ? searchBooks(query) : getBooks());
+        let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
+            <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
         books.forEach((item) => {
-            htmlString += `\n<div class="col mx">
+            htmlString += `\n<div>
                 <div class="card" style="width: 300px; height: 400px;">
                     <div style="width: 100%; height: 100%; overflow: hidden;">
                         <img src="${item.fields.image_l}" style="object-fit: cover; width: 100%; height: 100%;" class="card-img-top" alt="...">
@@ -27,14 +113,45 @@
                         <h5 class="card-title">${item.fields.title}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">${item.fields.isbn}</h6>
                     </div>
+                    {% if request.user == user %}
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-outline-danger" onclick="deleteItem(${item.pk})">Delete</button>
+                    </div>
+                    {% endif %}
                 </div>
             </div>` 
         })
-        htmlString += `</div>
+        htmlString += `\n</div>
         </div>`
         
         document.getElementById("catalog").innerHTML = htmlString
     }
+
+    function addProduct() {
+        fetch("{% url 'main:addReview' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        })
+
+        document.getElementById("form").reset()
+        return false
+    }
+    document.getElementById("button_add").onclick = addProduct
+
+    async function deleteItem(itemId) {
+        const response = await fetch("/delitem/" + itemId)
+        refreshBooks();
+        if (response.status === 200) {
+            console.log('Deleted item');
+        } else {
+            console.error('Failed to delete item');
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", function() {
+        const query = this.value.trim();
+        refreshBooks(query);
+    });
 
     refreshBooks()
 </script>

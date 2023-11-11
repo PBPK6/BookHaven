@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -49,9 +49,10 @@ class RegisterForm(UserCreationForm):
     
     
 class ProfileEditForm(forms.ModelForm):
+    
     class Meta:
         model = User
-        fields = ['username', 'email']  # Add other fields as needed
+        fields = ['username', 'email', 'first_name']  # Add other fields as needed
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -74,9 +75,11 @@ def show_main(request):
     return render(request, 'main.html', context)
 
 def top(request):
+    user = request.user
     items =  Book.objects.all()[:10]
     context = {
         'items': items,
+        'user': user,
     }
     return render(request, "top.html", context)
 
@@ -89,12 +92,16 @@ def library(request):
     }
     return render(request, "library.html", context)
 
-def booklist(request):
-    items =  Book.objects.all()
-    user = request.user
+def booklist(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return render(request, "user_not_found.html")
+
+    items = Book.objects.all()
     context = {
         'items': items,
-        'user' : user,
+        'user': user,
     }
     return render(request, "booklist.html", context)
 
@@ -143,6 +150,7 @@ def logout_user(request):
     response.delete_cookie('last_login')
     return response
 
+
 @login_required
 def edit_profile(request):
     if request.method == 'POST':
@@ -173,16 +181,6 @@ def search_book(request):
             
         # }
         # return render(request, 'search_book.html', context)
-    
-def create_book(request):
-    form = BookForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return HttpResponseRedirect(reverse('main:show_main'))
-
-    context = {'form': form}
-    return render(request, "create_book.html", context)
 
 @login_required
 def add_to_list(request, id):
@@ -192,12 +190,50 @@ def add_to_list(request, id):
 
     return JsonResponse({'message': 'Book added to the list'})
 
+@login_required
+def delItem(request,id):
+    book = get_object_or_404(Book, pk=id)
+    userbook_entry, created = userbook.objects.get_or_create(user=request.user)
+    userbook_entry.books.remove(book)
+
+    return JsonResponse({'message': 'Book removed from the list'})
+
 def get_books(request):
     book = Book.objects.all()
     return HttpResponse(serializers.serialize("json",book))
 
-def get_user_books(request):
-    user_books = userbook.objects.get(user=request.user)
-
+def get_user_books(request, username):
+    user = User.objects.get(username=username)
+    user_books = userbook.objects.get(user=user)
     books_data = user_books.books.all()
     return HttpResponse(serializers.serialize("json",books_data))
+
+def addReview(request):
+    if request.method == 'POST':
+        user = request.user
+        username = request.user.username
+        rate = request.POST.get("rate")
+        review = request.POST.get("review")
+        book = request.POST.get("book")
+
+        new_item = Review(rate=rate, review=review, book=book, user=user, username=username)
+        new_item.save()
+        print(user, rate, review, book)
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+def getReviewsJson(request):
+    reviewItems = Review.objects.all()
+    return HttpResponse(serializers.serialize('json', reviewItems))
+
+def reviews(request):
+    items =  Review.objects.all()
+    context = {
+        'items': items
+    }
+    return render(request, "review.html", context)
+
+def show_json(request):
+    data = Review.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
