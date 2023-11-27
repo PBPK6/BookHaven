@@ -15,6 +15,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
 from main.models import *
+from django.views.decorators.csrf import csrf_exempt
+import json
+from main.forms import ReviewForm
 
 
 class RegisterForm(UserCreationForm):
@@ -235,3 +238,59 @@ def reviews(request):
 def show_json(request):
     data = Review.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@csrf_exempt
+def create_review_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_review = Review.objects.create(
+            user = request.user,
+            username = request.user.username,
+            book = data["book"],
+            rate = int(data["rate"]),
+            review = data["review"]
+        )
+
+        new_review.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+@csrf_exempt
+def edit_review_flutter(request, id):
+    data = json.loads(request.body)
+    review = Review.objects.get(pk = id)
+    edit = dict(
+        user= request.user, 
+        username = request.user.username, 
+        book = data['book'], 
+        rate = data['rate'], 
+        review = data['review']
+        )
+
+    form = ReviewForm(edit or None, instance=review)
+    
+    if form.is_valid():
+        form.save()
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        print(form.errors)
+        return JsonResponse({"status": "error"}, status=401)
+
+@csrf_exempt
+def delete_review_flutter(request, id):
+    if request.method == 'POST':
+        review = Review.objects.get(pk = id)
+        review.delete()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+
+@csrf_exempt
+def user_review_flutter(request):
+    review = Review.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", review), content_type="application/json")
