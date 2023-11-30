@@ -24,4 +24,5 @@ urlpatterns = [
     path('create-flutter-review/', create_review_flutter, name='create_review_flutter'),
     path('edit-flutter-review/<int:id>', edit_review_flutter, name='edit_review_flutter'),
     path('delete-flutter-review/<int:id>', delete_review_flutter, name='delete_review_flutter'),
+    path('get_user_books_flutter/', get_user_books_flutter, name="get_user_books_flutter"),
 ]

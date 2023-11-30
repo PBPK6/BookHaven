@@ -209,6 +209,11 @@ def get_user_books(request, username):
     books_data = user_books.books.all()
     return HttpResponse(serializers.serialize("json",books_data))
 
+def get_user_books_flutter(request):
+    user_books = userbook.objects.get(user=request.user)
+    books_data = user_books.books.all()
+    return HttpResponse(serializers.serialize("json",books_data))
+
 def addReview(request):
     if request.method == 'POST':
         user = request.user
