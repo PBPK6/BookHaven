@@ -35,19 +35,6 @@
     }
     .h-100{
         background-color: #A73121;
-<<<<<<< HEAD
-    }
-</style>
-{% if user.is_superuser %}
-<a class="btn btn-danger" href="/admin/main/book/" role="button">ADD/EDIT/DELETE</a>
-{% endif %}
-
-<div class="container mt-3">
-    <input type="text" id="searchInput" class="form-control" placeholder="Search for books..." style="margin: 10px;">
-</div>
-
-<table id="catalog"></table>
-=======
       }
       .card {
         min-width: 250px; /* Adjust the value as needed */
@@ -127,7 +114,6 @@
 <div id="noResultsMessage" style="margin-top: 10px; margin-right: 10%; margin-left: 10%; display:none; font-size: 24px; text-align: center; justifyContent: center; backgroundColor: #0174BE;"></div>
 
 {% include 'footer.html' %}
->>>>>>> 70d84658381d5036352369c2736c1cd9a4c07654
 
 <script>
     async function getBooks() {
@@ -137,16 +123,6 @@
     async function searchBooks(query) {
         const books = await getBooks();
         const filteredBooks = books.filter(item => item.fields.title.toLowerCase().includes(query.toLowerCase()));
-<<<<<<< HEAD
-        return filteredBooks;
-    }
-
-    async function refreshBooks(query = '') {
-        document.getElementById("catalog").innerHTML = ""
-        const books = await (query ? searchBooks(query) : getBooks());
-        let htmlString = `<div class="container">
-            <div class="row row-cols-1 row-cols-md-4 g-4">`
-=======
         //The ".includes" function means that it will scan the field 'title' to see if it contains the string inputted by the user 
         return filteredBooks;
         //Return the resulting filtered
@@ -190,7 +166,6 @@
         }
         let htmlString = `<div class="container" style:"justify-content: center; display: flex; width: full;">
             <div style="gap: 2rem; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">`
->>>>>>> 70d84658381d5036352369c2736c1cd9a4c07654
         books.forEach((item) => {
             htmlString += `\n<div>
                 <div class="card" style="width: 300px; height: 400px;">
@@ -218,8 +193,6 @@
     document.getElementById("searchInput").addEventListener("input", function() {
         const query = this.value.trim();
         refreshBooks(query);
-<<<<<<< HEAD
-=======
         const letterDropdown = document.getElementById("letterDropdown");
     
         if (query) {
@@ -227,7 +200,6 @@
         } else {
             letterDropdown.disabled = false;
         }
->>>>>>> 70d84658381d5036352369c2736c1cd9a4c07654
     });
 
     async function addItemToList(itemId) {
@@ -242,9 +214,6 @@
         }
     }
 
-<<<<<<< HEAD
-    refreshBooks();
-=======
     document.getElementById("letterDropdown").addEventListener("change", function() {
         const searchInput = document.getElementById("searchInput");
     
@@ -268,7 +237,6 @@
             popup.classList.remove("show"); // Remove the 'show' class after 2 seconds
         }, 2000);
       }
->>>>>>> 70d84658381d5036352369c2736c1cd9a4c07654
 </script>
 
 {% endblock content %}
