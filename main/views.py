@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -190,6 +190,45 @@ def add_to_list(request, id):
     userbook_entry.books.add(book)
 
     return JsonResponse({'message': 'Book added to the list'})
+
+@csrf_exempt
+def add_to_list_fl(request):
+    try:
+        data = json.loads(request.body)
+
+        book = get_object_or_404(Book, isbn=data["isbn"])
+        userbook_entry, created = userbook.objects.get_or_create(user=request.user)
+
+        userbook_entry.books.add(book)
+        return JsonResponse({"status": "success"}, status=200)
+    except KeyError as e:
+        return JsonResponse({"status": "error", "message": f"KeyError: {e}"}, status=400)
+
+    except Http404 as e:
+        return JsonResponse({"status": "error", "message": f"Book not found: {e}"}, status=404)
+
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {e}"}, status=500)
+
+@csrf_exempt
+def del_from_list_fl(request):
+    try:
+        data = json.loads(request.body)
+
+        book = get_object_or_404(Book, isbn=data["isbn"])
+        userbook_entry, created = userbook.objects.get_or_create(user=request.user)
+
+        userbook_entry.books.remove(book)
+        return JsonResponse({"status": "success"}, status=200)
+    except KeyError as e:
+        return JsonResponse({"status": "error", "message": f"KeyError: {e}"}, status=400)
+
+    except Http404 as e:
+        return JsonResponse({"status": "error", "message": f"Book not found: {e}"}, status=404)
+
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {e}"}, status=500)
+
 
 @login_required
 def delItem(request,id):
