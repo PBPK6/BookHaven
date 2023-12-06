@@ -58,17 +58,13 @@ def logout(request):
 def register(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        form = UserCreationForm({"username": data['username'], "password1": data['password1'], "password2": data['password2']})
+        form = UserCreationForm(data)
         if form.is_valid():
             form.save()
-            return JsonResponse({
-                "status": True,
-                "message": "User successfully registered!"
-            }, status=200)
+            return JsonResponse({"status": "success"}, status=200)  
         else:
-            test = messages.get_messages(request)
-
-            return JsonResponse({
-                "status": False,
-                "message": "Register failed!",
-            }, status=401)
+            errorDict = {}
+            for field, errors in form.errors.items():
+                for error in errors:
+                    errorDict[field] = error
+            return JsonResponse(errorDict, status=400)
