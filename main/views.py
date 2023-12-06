@@ -249,8 +249,9 @@ def get_user_books(request, username):
     return HttpResponse(serializers.serialize("json",books_data))
 
 def get_user_books_flutter(request):
-    user_books = userbook.objects.get(user=request.user)
+    user_books, created = userbook.objects.get_or_create(user=request.user)
     books_data = user_books.books.all()
+    print(books_data)
     return HttpResponse(serializers.serialize("json",books_data))
 
 def addReview(request):
