@@ -8,6 +8,9 @@ import json
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
 def login(request):
@@ -58,7 +61,7 @@ def logout(request):
 def register(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        form = UserCreationForm({"username": data['username'], "password1": data['password1'], "password2": data['password2']})
+        form = UserCreationForm({"username": data['username'], "fullname": data['fullname'], "email": data['email'], "password1": data['password1'], "password2": data['password2']})
         if form.is_valid():
             form.save()
             return JsonResponse({
@@ -72,3 +75,35 @@ def register(request):
                 "status": False,
                 "message": "Register failed!",
             }, status=401)
+            
+@login_required
+@csrf_exempt
+def update_username(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        new_username = data.get('new_username')
+
+        if new_username:
+            try:
+                user = request.user
+                user.username = new_username
+                user.save()
+                return JsonResponse({
+                    "status": True,
+                    "message": "Username updated successfully!"
+                }, status=200)
+            except Exception as e:
+                return JsonResponse({
+                    "status": False,
+                    "message": f"Failed to update username. Error: {str(e)}"
+                }, status=500)
+        else:
+            return JsonResponse({
+                "status": False,
+                "message": "Please provide a new username."
+            }, status=400)
+    else:
+        return JsonResponse({
+            "status": False,
+            "message": "Invalid request method. Only POST allowed."
+        }, status=405)
