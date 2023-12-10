@@ -63,6 +63,7 @@ def register(request):
         data = json.loads(request.body)
         form = UserCreationForm({"username": data['username'], "fullname": data['fullname'], "email": data['email'], "password1": data['password1'], "password2": data['password2']})
         if form.is_valid():
+            print(form)
             form.save()
             return JsonResponse({
                 "status": True,
@@ -82,11 +83,19 @@ def update_username(request):
     if request.method == "POST":
         data = json.loads(request.body)
         new_username = data.get('new_username')
+        new_email = data.get('new_email')
+        new_fullname = data.get('new_fullname')
+        first_name = new_fullname.split()
+        new_firstname = first_name[0]
+        print(type(new_fullname))
+        print(new_fullname)
 
         if new_username:
             try:
                 user = request.user
                 user.username = new_username
+                user.email = new_email
+                user.first_name = new_firstname
                 user.save()
                 return JsonResponse({
                     "status": True,
@@ -107,3 +116,21 @@ def update_username(request):
             "status": False,
             "message": "Invalid request method. Only POST allowed."
         }, status=405)
+        
+@login_required
+@csrf_exempt
+def get_user_details(request):
+    user = request.user
+    if user.is_authenticated:
+        username = user.username
+        email = user.email
+        first_name = user.first_name
+        return JsonResponse({
+            "username": username, 
+            "email": email,
+            "first_name": first_name,
+        }, status=200)
+    else:
+        return JsonResponse({
+            "error": "User not authenticated"
+        }, status=401)

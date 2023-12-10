@@ -149,4 +149,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CSRF_TRUSTED_ORIGINS = ["https://bookhaven-k6-tk.pbp.cs.ui.ac.id"]
+CSRF_TRUSTED_ORIGINS = ["https://bookhaven-k6-tk.pbp.cs.ui.ac.id", "http://localhost:61021"]
