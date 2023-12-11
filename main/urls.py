@@ -27,4 +27,8 @@ urlpatterns = [
     path('get_user_books_flutter/', get_user_books_flutter, name="get_user_books_flutter"),
     path('add_to_list_fl/', add_to_list_fl, name="add_to_list_fl"),
     path('del_from_list_fl/', del_from_list_fl, name="del_from_list_fl"),
+    path('del_from_library_fl/', del_from_library_fl, name="del_from_library_fl"),
+    path('check_su/', is_superuser, name='is_superuser'),
+    path('set_su/', set_superuser, name='set_superuser'),
+    path('rem_su/', rem_superuser, name='rem_superuser'),
 ]

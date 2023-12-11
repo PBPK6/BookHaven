@@ -228,6 +228,42 @@ def del_from_list_fl(request):
 
     except Exception as e:
         return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {e}"}, status=500)
+    
+@csrf_exempt
+def del_from_library_fl(request):
+    try:
+        data = json.loads(request.body)
+
+        book = get_object_or_404(Book, isbn=data["isbn"])
+
+        book.delete()
+        return JsonResponse({"status": "success"}, status=200)
+    except KeyError as e:
+        return JsonResponse({"status": "error", "message": f"KeyError: {e}"}, status=400)
+
+    except Http404 as e:
+        return JsonResponse({"status": "error", "message": f"Book not found: {e}"}, status=404)
+
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {e}"}, status=500)
+
+def is_superuser(request):
+    is_superuser = request.user.is_superuser
+    return JsonResponse({'is_superuser': is_superuser})
+
+def set_superuser(request):
+    user = request.user
+    user.is_superuser = True
+    user.is_staff = True
+    user.save()
+    return JsonResponse({'is_superuser': user.is_superuser})
+
+def rem_superuser(request):
+    user = request.user
+    user.is_superuser = False
+    user.is_staff = False
+    user.save()
+    return JsonResponse({'is_superuser': user.is_superuser})
 
 
 @login_required
