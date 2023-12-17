@@ -10,8 +10,57 @@ from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django import forms
 from django.contrib.auth.decorators import login_required
 
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(label = "Email")
+    fullname = forms.CharField(label = "Full")
+
+    class Meta:
+        model = User
+        fields = ("username", "fullname", "email", 'password1', 'password2')
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = None #"What should we call you, dear audience"
+        self.fields['password1'].help_text = None
+        self.fields['password2'].help_text = None
+        
+    def save(self, commit=True):
+        user = super(RegisterForm, self).save(commit=False)
+        full_name = self.cleaned_data["fullname"].split()
+        user.first_name = full_name[0]
+        #print(user.first_name)
+        user.last_name = full_name[-1]
+        user.email = self.cleaned_data["email"]
+        user.password = self.cleaned_data["password1"]
+        user.set_password(user.password)
+        user.save()
+        #print(user.role)
+        return user
+
+@require_POST 
+@csrf_exempt
+def register(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        form = RegisterForm({"username": data['username'], "fullname": data['fullname'], "email": data['email'], "password1": data['password1'], "password2": data['password2']})
+        print(data['email'])
+        print(data['fullname'])
+        if form.is_valid():
+            form.save()
+            return JsonResponse({
+                "status": True,
+                "message": "User successfully registered!"
+            }, status=200)
+        else:
+            print(form.errors.items())
+            return JsonResponse({
+                "status": False,
+                "message": "Register failed!",
+            }, status=401)
+            
 @csrf_exempt
 def login(request):
     username = request.POST['username']
@@ -55,27 +104,6 @@ def logout(request):
         "status": False,
         "message": "Logout failed."
         }, status=401)
-
-@require_POST   
-@csrf_exempt
-def register(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        form = UserCreationForm({"username": data['username'], "fullname": data['fullname'], "email": data['email'], "password1": data['password1'], "password2": data['password2']})
-        if form.is_valid():
-            print(form)
-            form.save()
-            return JsonResponse({
-                "status": True,
-                "message": "User successfully registered!"
-            }, status=200)
-        else:
-            test = messages.get_messages(request)
-
-            return JsonResponse({
-                "status": False,
-                "message": "Register failed!",
-            }, status=401)
             
 @login_required
 @csrf_exempt
@@ -102,6 +130,7 @@ def update_username(request):
                     "message": "Username updated successfully!"
                 }, status=200)
             except Exception as e:
+                print(e)
                 return JsonResponse({
                     "status": False,
                     "message": f"Failed to update username. Error: {str(e)}"
@@ -117,7 +146,6 @@ def update_username(request):
             "message": "Invalid request method. Only POST allowed."
         }, status=405)
         
-@login_required
 @csrf_exempt
 def get_user_details(request):
     user = request.user
