@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
 import csv, datetime
-
+from django.views.decorators.http import require_GET
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
@@ -84,6 +84,7 @@ def top(request):
     }
     return render(request, "top.html", context)
 
+
 def library(request):
     items =  Book.objects.all()
     user = request.user
@@ -92,6 +93,12 @@ def library(request):
         'user': user,
     }
     return render(request, "library.html", context)
+
+@login_required
+def get_user_books_count(request):
+    user = request.user
+    book_count = Book.objects.filter(userbook__user=user).count()
+    return JsonResponse({'book_count': book_count})
 
 def booklist(request, username):
     try:

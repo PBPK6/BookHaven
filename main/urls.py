@@ -5,6 +5,7 @@ app_name = 'main'
 
 urlpatterns = [
     path('', show_main, name='show_main'),
+    path('get_user_books_count/', get_user_books_count, name='get_user_books_count'),
     path('top/', top, name='top'),
     path('library/', library, name='library'),
     path('booklist/<str:username>', booklist, name='booklist'),
