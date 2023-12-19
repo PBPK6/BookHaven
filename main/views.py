@@ -309,7 +309,6 @@ def addReview(request):
 
         new_item = Review(rate=rate, review=review, book=book, user=user, username=username)
         new_item.save()
-        print(user, rate, review, book)
         return HttpResponse(b"CREATED", status=201)
 
     return HttpResponseNotFound()
@@ -367,7 +366,6 @@ def edit_review_flutter(request, id):
         form.save()
         return JsonResponse({"status": "success"}, status=200)
     else:
-        print(form.errors)
         return JsonResponse({"status": "error"}, status=401)
 
 @csrf_exempt
