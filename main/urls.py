@@ -32,4 +32,6 @@ urlpatterns = [
     path('check_su/', is_superuser, name='is_superuser'),
     path('set_su/', set_superuser, name='set_superuser'),
     path('rem_su/', rem_superuser, name='rem_superuser'),
+    path('get_username/', get_username, name='get_username'),
+
 ]

@@ -272,7 +272,9 @@ def rem_superuser(request):
     user.save()
     return JsonResponse({'is_superuser': user.is_superuser})
 
-
+def get_username(request):
+    return JsonResponse({'username': request.user.username})
+    
 @login_required
 def delItem(request,id):
     book = get_object_or_404(Book, pk=id)
